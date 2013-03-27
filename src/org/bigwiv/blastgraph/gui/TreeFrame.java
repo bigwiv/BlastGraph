@@ -270,7 +270,7 @@ public class TreeFrame extends JFrame implements MouseWheelListener,
 		gainLossDataBar.add(alphaSlider);
 
 		JPanel toolPanel = new JPanel();
-		toolPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		toolPanel.setLayout(new ModifiedFlowLayout(ModifiedFlowLayout.LEFT, 0, 0));
 		toolPanel.setBorder(new EtchedBorder());
 
 		toolPanel.add(fileBar);

@@ -686,7 +686,7 @@ public class BlastGraphFrame extends JFrame {
 		
 		// add toolbars to toolBarPanel
 		toolBarPanel = new JPanel();
-		toolBarPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		toolBarPanel.setLayout(new ModifiedFlowLayout(ModifiedFlowLayout.LEFT, 0, 0));
 		toolBarPanel.setBorder(new EtchedBorder());
 		toolBarPanel.add(fileToolBar);
 		toolBarPanel.add(graphToolBar);
