@@ -1,0 +1,44 @@
+/**
+ * 
+ */
+package org.bigwiv.blastgraph.command;
+
+import java.util.Collection;
+
+import org.bigwiv.blastgraph.HitVertex;
+
+
+/**
+ * @author yeyanbo
+ *
+ */
+public class TreeClusterCommand extends Command {
+
+	/**
+	 * 
+	 */
+	public TreeClusterCommand() {
+		this.isUndoable = true;
+		this.commandName = "TreeCluster";
+	}
+
+	/* (non-Javadoc)
+	 * @see com.yeyanbo.bio.blastgraph.command.Command#concreteExecute()
+	 */
+	@Override
+	public void concreteExecute() {
+		
+		Collection<HitVertex> neighbors;
+
+	}
+
+	/* (non-Javadoc)
+	 * @see com.yeyanbo.bio.blastgraph.command.Command#concreteUnExecute()
+	 */
+	@Override
+	public void concreteUnExecute() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

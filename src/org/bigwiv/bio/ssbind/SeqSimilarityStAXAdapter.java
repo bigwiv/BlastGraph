@@ -1,0 +1,184 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
+
+package org.bigwiv.bio.ssbind;
+
+import org.biojava.bio.search.SearchContentHandler;
+import org.biojava.utils.stax.DelegationManager;
+import org.biojava.utils.stax.StAXContentHandler;
+import org.biojava.utils.stax.StAXContentHandlerBase;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+/**
+ * <code>SeqSimilarityStAXAdapter</code> is a handler for XML
+ * conforming to the BioJava BlastLike DTD. Together with its modular
+ * delegate handlers it converts XML into calls on a
+ * <code>SearchContentHandler</code> interface. Implementations of the
+ * at interface create various types of Java object from the XML data.
+ *
+ * @author Keith James
+ * @since 1.3
+ */
+public class SeqSimilarityStAXAdapter extends StAXContentHandlerBase
+{
+    public static final String NAMESPACE = "http://www.biojava.org";
+
+    // Incremented on startElement, decremented on endElement. Used to
+    // identify which method calls to handle here and which to
+    // delegate.
+    private int depth;
+
+    // The target handler
+    private SearchContentHandler scHandler;
+    // The name of the program which generated the results
+    private String program = "unknown";
+
+    @Override
+	public void startElement(String            nsURI,
+                             String            localName,
+                             String            qName,
+                             Attributes        attrs,
+                             DelegationManager dm)
+        throws SAXException
+    {
+        depth++;
+
+        if (! nsURI.equals(NAMESPACE))
+            throw new SAXException("Failed to handle Element " + localName
+                                   + " in namespace " + nsURI);
+        
+        //System.out.println("startElement called; localName: " + localName + "; depth: " + depth);
+
+        if (depth == 2)
+        {
+            if (localName.equals("QueryCollection"))
+            {
+                scHandler.setMoreSearches(true);
+            }
+        }
+        else
+        {
+            if (localName.equals("Query"))
+            {
+                scHandler.startSearch();
+                scHandler.addSearchProperty("program", attrs.getValue("program"));
+                scHandler.addSearchProperty("version", attrs.getValue("version"));
+                return;
+            }
+            else if (localName.equals("Header"))
+            {
+                // Capture Header element and subtree
+                dm.delegate(HeaderStAXHandler.HEADER_HANDLER_FACTORY.getHandler(this));
+                return;
+            }
+            else if (localName.equals("Statistics"))
+            {
+            	scHandler.addSearchProperty("databaseNumber", attrs.getValue("databaseNumber"));
+            	scHandler.addSearchProperty("databaseLength", attrs.getValue("databaseLength"));
+            	scHandler.addSearchProperty("hspLength", attrs.getValue("hspLength"));
+            	scHandler.addSearchProperty("efficientSpace", attrs.getValue("efficientSpace"));
+            	scHandler.addSearchProperty("kappa", attrs.getValue("kappa"));
+            	scHandler.addSearchProperty("lambda", attrs.getValue("lambda"));
+            	scHandler.addSearchProperty("entropy", attrs.getValue("entropy"));
+            }
+            else if (localName.equals("Hit"))
+            {
+                // Drop through the Detail element to the Hit elements
+                // and their subtrees
+                dm.delegate(HitStAXHandler.HIT_HANDLER_FACTORY.getHandler(this));
+            }
+        }
+    }
+
+    @Override
+	public void endElement(String             nsURI,
+                           String             localName,
+                           String             qName,
+                           StAXContentHandler handler)
+        throws SAXException
+    {
+        depth--;
+        
+      	//System.out.println("endElement called; localName: " + localName + "; depth: " + depth);
+
+        if (depth == 1)
+        {
+            if (localName.equals("QueryCollection"))
+            {
+                scHandler.setMoreSearches(false);
+            }
+        }
+        else
+        {
+            if (localName.equals("Query"))
+            {
+                scHandler.endSearch();
+            }
+        }
+    }
+
+    /**
+     * <code>getSearchContentHandler</code> gets the handler which
+     * will receive the method calls generated by the adapter.
+     *
+     * @return a <code>SearchContentHandler</code>.
+     */
+    public SearchContentHandler getSearchContentHandler()
+    {
+        return scHandler;
+    }
+
+    /**
+     * <code>setSearchContentHandler</code> sets the handler which
+     * will recieve the method calls generated by the adapter.
+     *
+     * @param scHandler a <code>SearchContentHandler</code>.
+     */
+    public void setSearchContentHandler(SearchContentHandler scHandler)
+    {
+        this.scHandler = scHandler;
+    }
+
+    /**
+     * <code>getProgram</code> returns the program type which
+     * generated the results.
+     *
+     * @return a <code>String</code> indicating the progam
+     * name.
+     */
+    String getProgram()
+    {
+        return program;
+    }
+
+    /**
+     * <code>setProgram</code> informs the adapter which program type
+     * it is working on.
+     *
+     * @param program a <code>String</code> indicating the progam
+     * name.
+     */
+    void setProgram(String program)
+    {
+        this.program = program;
+    }
+}
