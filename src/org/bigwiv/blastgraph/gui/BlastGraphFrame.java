@@ -3,6 +3,7 @@ package org.bigwiv.blastgraph.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -27,6 +28,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -132,8 +135,8 @@ public class BlastGraphFrame extends JFrame {
 			markovClusterItem, mstItem, genomeNumFiltItem,
 			removeSingleLinkageItem, settingItem;
 	private JMenuItem previousItem, nextItem, resortItem, viewNeighborItem;
-	private JMenuItem geneContentItem; 
-	//private JMenuItem tempWorkItem;
+	private JMenuItem geneContentItem;
+	// private JMenuItem tempWorkItem;
 
 	private JToolBar fileToolBar, graphToolBar, viewToolBar, annotationToolBar;
 	private JPanel toolBarPanel;
@@ -327,8 +330,7 @@ public class BlastGraphFrame extends JFrame {
 	private void initComponents() {
 
 		URL icon;
-		icon = getClass().getResource(
-				"/org/bigwiv/blastgraph/icons/icon.png");
+		icon = getClass().getResource("/org/bigwiv/blastgraph/icons/icon.png");
 		this.setIconImage(Toolkit.getDefaultToolkit().createImage(icon));
 		JComponent pane;
 		pane = (JComponent) getContentPane();
@@ -425,11 +427,11 @@ public class BlastGraphFrame extends JFrame {
 		markovClusterItem = new JMenuItem("Markov Cluster");
 		markovClusterItem.addActionListener(commandActionListener);
 
-//		genomeNumFiltItem = new JMenuItem("GenomeNum Filt");
-//		genomeNumFiltItem.addActionListener(commandActionListener);
+		// genomeNumFiltItem = new JMenuItem("GenomeNum Filt");
+		// genomeNumFiltItem.addActionListener(commandActionListener);
 
-//		removeSingleLinkageItem = new JMenuItem("Remove Single Linkage");
-//		removeSingleLinkageItem.addActionListener(commandActionListener);
+		// removeSingleLinkageItem = new JMenuItem("Remove Single Linkage");
+		// removeSingleLinkageItem.addActionListener(commandActionListener);
 
 		editMenu = new JMenu("Edit");
 		editMenu.setMnemonic('e');
@@ -438,26 +440,26 @@ public class BlastGraphFrame extends JFrame {
 		editMenu.add(filterItem);
 		editMenu.add(markovClusterItem);
 		editMenu.add(removeSingleItem);
-//		editMenu.add(genomeNumFiltItem);
-//		editMenu.add(removeSingleLinkageItem);
+		// editMenu.add(genomeNumFiltItem);
+		// editMenu.add(removeSingleLinkageItem);
 		editMenu.add(settingItem);
 
-		//Tools Item
+		// Tools Item
 		geneContentItem = new JMenuItem("Gene Content Table");
 		geneContentItem.addActionListener(commandActionListener);
 
 		batchSaveItem = new JMenuItem("Batch Save");
 		batchSaveItem.addActionListener(commandActionListener);
-		
+
 		mstItem = new JMenuItem("Minimum Spanning Tree");
 		mstItem.addActionListener(commandActionListener);
-		
+
 		viewNeighborItem = new JMenuItem("View Neighbor of...");
 		viewNeighborItem.addActionListener(commandActionListener);
 
-//
-//		tempWorkItem = new JMenuItem("Temp Work");
-//		tempWorkItem.addActionListener(commandActionListener);
+		//
+		// tempWorkItem = new JMenuItem("Temp Work");
+		// tempWorkItem.addActionListener(commandActionListener);
 
 		toolsMenu = new JMenu("Tools");
 		toolsMenu.setMnemonic('t');
@@ -465,7 +467,7 @@ public class BlastGraphFrame extends JFrame {
 		toolsMenu.add(viewNeighborItem);
 		toolsMenu.add(mstItem);
 		toolsMenu.add(batchSaveItem);
-//		toolsMenu.add(tempWorkItem);
+		// toolsMenu.add(tempWorkItem);
 
 		// graph Menu
 		graphMenu = new JMenu("Graph");
@@ -475,13 +477,13 @@ public class BlastGraphFrame extends JFrame {
 		nextItem.addActionListener(commandActionListener);
 		resortItem = new JMenuItem("Resort graphs");
 		resortItem.addActionListener(commandActionListener);
-		
+
 		graphMenu.add(nextItem);
 		graphMenu.add(previousItem);
 		graphMenu.add(resortItem);
 
 		// help Menu
-		helpContentItem = new JMenuItem("Help Content");
+		helpContentItem = new JMenuItem("Online Manual");
 		helpContentItem.addActionListener(commandActionListener);
 		aboutItem = new JMenuItem("About BlastGraph");
 		aboutItem.addActionListener(commandActionListener);
@@ -594,24 +596,23 @@ public class BlastGraphFrame extends JFrame {
 		nextButton.setBorderPainted(false);
 		nextButton.setToolTipText("Next graph");
 		nextButton.addActionListener(commandActionListener);
-		icon = getClass().getResource(
-				"/org/bigwiv/blastgraph/icons/next.png");
+		icon = getClass().getResource("/org/bigwiv/blastgraph/icons/next.png");
 		nextButton.setIcon(new ImageIcon(icon));
 
 		filterButton = new JButton();
 		filterButton.setBorderPainted(false);
 		filterButton.setToolTipText("Filt graph");
 		filterButton.addActionListener(commandActionListener);
-		icon = getClass().getResource(
-				"/org/bigwiv/blastgraph/icons/filter.png");
+		icon = getClass()
+				.getResource("/org/bigwiv/blastgraph/icons/filter.png");
 		filterButton.setIcon(new ImageIcon(icon));
 
 		resortButton = new JButton();
 		resortButton.setBorderPainted(false);
 		resortButton.setToolTipText("Resort graph");
 		resortButton.addActionListener(commandActionListener);
-		icon = getClass().getResource(
-				"/org/bigwiv/blastgraph/icons/resort.png");
+		icon = getClass()
+				.getResource("/org/bigwiv/blastgraph/icons/resort.png");
 		resortButton.setIcon(new ImageIcon(icon));
 
 		searchField = new JTextField();
@@ -624,8 +625,8 @@ public class BlastGraphFrame extends JFrame {
 		searchButton.setBorderPainted(false);
 		searchButton.setToolTipText("Search");
 		searchButton.addActionListener(commandActionListener);
-		icon = getClass().getResource(
-				"/org/bigwiv/blastgraph/icons/search.png");
+		icon = getClass()
+				.getResource("/org/bigwiv/blastgraph/icons/search.png");
 		searchButton.setIcon(new ImageIcon(icon));
 
 		graphToolBar.add(filterButton);
@@ -680,13 +681,14 @@ public class BlastGraphFrame extends JFrame {
 		AnnotationControls<HitVertex, ValueEdge> annotationControls = new AnnotationControls<HitVertex, ValueEdge>(
 				annotatingPlugin);
 		annotationToolBar = annotationControls.getAnnotationsToolBar();
-		((JButton)annotationToolBar.getComponent(1)).setBorderPainted(false);
-		((JToggleButton)annotationToolBar.getComponent(2)).setBorderPainted(false);
-		
-		
+		((JButton) annotationToolBar.getComponent(1)).setBorderPainted(false);
+		((JToggleButton) annotationToolBar.getComponent(2))
+				.setBorderPainted(false);
+
 		// add toolbars to toolBarPanel
 		toolBarPanel = new JPanel();
-		toolBarPanel.setLayout(new ModifiedFlowLayout(ModifiedFlowLayout.LEFT, 0, 0));
+		toolBarPanel.setLayout(new ModifiedFlowLayout(ModifiedFlowLayout.LEFT,
+				0, 0));
 		toolBarPanel.setBorder(new EtchedBorder());
 		toolBarPanel.add(fileToolBar);
 		toolBarPanel.add(graphToolBar);
@@ -1445,10 +1447,10 @@ public class BlastGraphFrame extends JFrame {
 					geneContentFrame.setModel(geneContentModel);
 					geneContentFrame.setVisible(true);
 				}
-//			} else if (eventSource.equals(tempWorkItem)) {
-//				command = new RemovePercenteEdgeCommand(0.4, 0.01);
-//				Global.COMMAND_MANAGER.putCommand(command,
-//						CommandManager.CURRENT_THREAD);
+				// } else if (eventSource.equals(tempWorkItem)) {
+				// command = new RemovePercenteEdgeCommand(0.4, 0.01);
+				// Global.COMMAND_MANAGER.putCommand(command,
+				// CommandManager.CURRENT_THREAD);
 			} else if (eventSource.equals(helpContentItem)) {
 				showHelpContent();
 			} else if (eventSource.equals(aboutItem)) {
@@ -1485,10 +1487,10 @@ public class BlastGraphFrame extends JFrame {
 
 		filterItem.setEnabled(isOpen);
 		removeSingleItem.setEnabled(isOpen);
-//		genomeNumFiltItem.setEnabled(isOpen);
+		// genomeNumFiltItem.setEnabled(isOpen);
 		markovClusterItem.setEnabled(isOpen);
 		mstItem.setEnabled(isOpen);
-//		removeSingleLinkageItem.setEnabled(isOpen);
+		// removeSingleLinkageItem.setEnabled(isOpen);
 		viewNeighborItem.setEnabled(isOpen);
 
 		saveButton.setEnabled(isOpen);
@@ -1662,16 +1664,11 @@ public class BlastGraphFrame extends JFrame {
 					degreePct));
 			int option;
 			if (count > maxCount) {
-				option = JOptionPane
-						.showConfirmDialog(
-								this,
-								"Too large("
-										+ count
-										+ " vertices>"
-										+ maxCount
-										+ ") to be displayed.Are you sure to display it?",
-								"Warning", JOptionPane.YES_NO_OPTION,
-								JOptionPane.WARNING_MESSAGE);
+				option = JOptionPane.showConfirmDialog(this, "Too large("
+						+ count + " vertices>" + maxCount
+						+ ") to be displayed.Are you sure to display it?",
+						"Warning", JOptionPane.YES_NO_OPTION,
+						JOptionPane.WARNING_MESSAGE);
 			} else {
 				option = JOptionPane.YES_OPTION;
 			}
@@ -1726,14 +1723,14 @@ public class BlastGraphFrame extends JFrame {
 			if (curIndex == 1) {
 				previousButton.setEnabled(false);
 				previousItem.setEnabled(false);
-			} 
-			
+			}
+
 			if (curIndex == max) {
 				nextButton.setEnabled(false);
 				nextItem.setEnabled(false);
-			} 
+			}
 
-			if(index > 1 && index < max){
+			if (index > 1 && index < max) {
 				previousButton.setEnabled(true);
 				previousItem.setEnabled(true);
 				nextButton.setEnabled(true);
@@ -1767,61 +1764,29 @@ public class BlastGraphFrame extends JFrame {
 	}
 
 	private void showHelpContent() {
-		String instructions = "<html>"
-				+ "<center><h2>Main Instruction</h2></center>"
-				+ "<ul>"
-				+ "<li>Open a blast xml file or gml file saved by this programe to open the graph"
-				+ "<li>The <b>Graph Info</b> panel display information of this graph"
-				+ "<li>Use <b>Filter</b> panel to filter weak edges in this graph"
-				+ "<li>Click <b>display</b> button in <b>SubGraph</b> panel to display 'Index'-th subgraph or<br>"
-				+ " which contains vetex of 'vetexName'(accession)"
-				+ "<li>The main Panel will display this subGraph. To control this view,check<br>"
-				+ " <b>Graph Control</b>section"
-				+ "<li><b>Import Extra Graph</b> will merge another graph into current graph"
-				+
 
-				"</ul>"
-				+ "<center><h2>Graph Control</h2></center>"
-				+ "<h3>Transforming Mode:</h3>"
-				+ "<ul>"
-				+ "<li>Mouse1+drag pans the graph"
-				+ "<li>Mouse1+Shift+drag rotates the graph"
-				+ "<li>Mouse1+CTRL(or Command)+drag shears the graph"
-				+ "<li>Mouse1 double-click on a vertex or edge allows you to edit the label"
-				+ "</ul>"
-				+ "<h3>Picking Mode:</h3>"
-				+ "<ul>"
-				+ "<li>Mouse1 on a Vertex selects the vertex"
-				+ "<li>Mouse1 elsewhere unselects all Vertices"
-				+ "<li>Mouse1+Shift on a Vertex adds/removes Vertex selection"
-				+ "<li>Mouse1+drag on a Vertex moves all selected Vertices"
-				+ "<li>Mouse1+drag elsewhere selects Vertices in a region"
-				+ "<li>Mouse1+Shift+drag adds selection of Vertices in a new region"
-				+ "<li>Mouse1+CTRL on a Vertex selects the vertex and centers the display on it"
-				+ "<li>Mouse1 double-click on a vertex or edge allows you to edit the label"
-				+ "</ul>" + "<h3>Annotation Mode:</h3>" + "<ul>"
-				+ "<li>Mouse1 begins drawing of a Rectangle"
-				+ "<li>Mouse1+drag defines the Rectangle shape"
-				+ "<li>Mouse1 release adds the Rectangle as an annotation"
-				+ "<li>Mouse1+Shift begins drawing of an Ellipse"
-				+ "<li>Mouse1+Shift+drag defines the Ellipse shape"
-				+ "<li>Mouse1+Shift release adds the Ellipse as an annotation"
-				+ "<li>Mouse3 shows a popup to input text, which will become"
-				+ "<li>a text annotation on the graph at the mouse location"
-				+ "</ul>" + "</html>";
-		JOptionPane.showMessageDialog(this, instructions, "Help",
-				JOptionPane.INFORMATION_MESSAGE);
+		try {
+			URI helpLink = new URI(
+					"https://github.com/bigwiv/BlastGraph/blob/master/doc/BlastGraph_Manual.md");
+			Desktop desktop = Desktop.isDesktopSupported() ? Desktop
+					.getDesktop() : null;
+			if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+				desktop.browse(helpLink);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void showAbout() {
-		String text = "BlastGraph is a program to show the similarity topology\n"
-				+ "of a set of genes implicited in a all2all-blast blast file.\n"
-				+ "This program can translate XML format blast file into graph\n"
-				+ "xml file(gml), and display each gene-cluster's topology in a\n"
-				+ "subGraph.\n"
-				+ "Better to use SUN JDK&JRE for performance.\n"
-				+ "\n"
-				+ "Author: Ye Yanbo\n" + "Mail: yeyanbo289@gmail.com";
+		String text = "BlastGraph is a user interactive Java program for comparative \n"
+					+ "genomics analysis based on BLAST, graph clustering algorithms \n"
+					+ "and data visualization libraries.\n"
+					+ "\n"
+					+ "Better to use SUN JDK&JRE for performance.\n"
+					+ "\n"
+					+ "Author: Yanbo Ye\n" + "Mail: yeyanbo289@gmail.com";
 
 		JOptionPane.showMessageDialog(this, text,
 				"About " + Global.APP_VERSION, JOptionPane.INFORMATION_MESSAGE);
