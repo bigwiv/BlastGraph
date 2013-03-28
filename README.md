@@ -6,9 +6,9 @@ BlastGraph is a user interactive java program for comparative genomics analysis 
 
 Downloads:
 
-- [Main Program][https://github.com/bigwiv/BlastGraph/raw/master/dist/BlastGraph.1.0.zip]
-- [Sample File][https://github.com/bigwiv/BlastGraph/raw/master/dist/sample.zip]
-- [All in One][https://github.com/bigwiv/BlastGraph/raw/master/dist/BlastGraph.1.0.all.zip]
+- [Main Program](https://github.com/bigwiv/BlastGraph/raw/master/dist/BlastGraph.1.0.zip)
+- [Sample File](https://github.com/bigwiv/BlastGraph/raw/master/dist/sample.zip)
+- [All in One](https://github.com/bigwiv/BlastGraph/raw/master/dist/BlastGraph.1.0.all.zip)
 
 Read the [manual][manual] for details about installation and usages.
 
