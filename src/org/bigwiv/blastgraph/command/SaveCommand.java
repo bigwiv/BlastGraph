@@ -30,7 +30,7 @@ public class SaveCommand extends Command {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.yeyanbo.bio.blastgraph.command.Command#concreteExecute()
+	 * @see org.bigwiv.blastgraph.command.Command#concreteExecute()
 	 */
 	@Override
 	protected void concreteExecute() {
@@ -51,7 +51,7 @@ public class SaveCommand extends Command {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.yeyanbo.bio.blastgraph.command.Command#concreteUnExecute()
+	 * @see org.bigwiv.blastgraph.command.Command#concreteUnExecute()
 	 */
 	@Override
 	protected void concreteUnExecute() {

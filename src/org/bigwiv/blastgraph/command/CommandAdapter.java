@@ -10,7 +10,7 @@ package org.bigwiv.blastgraph.command;
 public class CommandAdapter implements CommandListener {
 
 	/* (non-Javadoc)
-	 * @see com.yeyanbo.bio.blastgraph.command.CommandListener#onExecuteStart()
+	 * @see org.bigwiv.blastgraph.command.CommandListener#onExecuteStart()
 	 */
 	@Override
 	public void onExecuteStart() {
@@ -19,7 +19,7 @@ public class CommandAdapter implements CommandListener {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.yeyanbo.bio.blastgraph.command.CommandListener#onExecuteEnd()
+	 * @see org.bigwiv.blastgraph.command.CommandListener#onExecuteEnd()
 	 */
 	@Override
 	public void onExecuteEnd() {
@@ -28,7 +28,7 @@ public class CommandAdapter implements CommandListener {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.yeyanbo.bio.blastgraph.command.CommandListener#onUnExecuteStart()
+	 * @see org.bigwiv.blastgraph.command.CommandListener#onUnExecuteStart()
 	 */
 	@Override
 	public void onUnExecuteStart() {
@@ -37,7 +37,7 @@ public class CommandAdapter implements CommandListener {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.yeyanbo.bio.blastgraph.command.CommandListener#onUnExecuteEnd()
+	 * @see org.bigwiv.blastgraph.command.CommandListener#onUnExecuteEnd()
 	 */
 	@Override
 	public void onUnExecuteEnd() {

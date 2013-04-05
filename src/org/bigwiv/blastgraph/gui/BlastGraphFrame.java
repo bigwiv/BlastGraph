@@ -1752,7 +1752,7 @@ public class BlastGraphFrame extends JFrame {
 
 		if (layout == LayoutType.EWLayout) {
 			layoutClass = Class
-					.forName("com.yeyanbo.bio.blastgraph.gui.graphvisualization.EWLayout");
+					.forName("org.bigwiv.blastgraph.gui.graphvisualization.EWLayout");
 		} else {
 			layoutClass = Class.forName("edu.uci.ics.jung.algorithms.layout."
 					+ layout);

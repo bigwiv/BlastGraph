@@ -36,7 +36,7 @@ public class ExportCommand extends Command {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.yeyanbo.bio.blastgraph.command.Command#concreteExecute()
+	 * @see org.bigwiv.blastgraph.command.Command#concreteExecute()
 	 */
 	@Override
 	public void concreteExecute() {

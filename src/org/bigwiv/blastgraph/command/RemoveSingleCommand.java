@@ -26,7 +26,7 @@ public class RemoveSingleCommand extends Command {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.yeyanbo.bio.blastgraph.command.Command#concreteExecute()
+	 * @see org.bigwiv.blastgraph.command.Command#concreteExecute()
 	 */
 	@Override
 	public void concreteExecute() {
@@ -44,7 +44,7 @@ public class RemoveSingleCommand extends Command {
 	}
 
 	/* (non-Javadoc)
-	 * @see com.yeyanbo.bio.blastgraph.command.Command#concreteUnExecute()
+	 * @see org.bigwiv.blastgraph.command.Command#concreteUnExecute()
 	 */
 	@Override
 	public void concreteUnExecute() {
