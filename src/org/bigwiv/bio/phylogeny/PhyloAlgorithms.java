@@ -469,8 +469,6 @@ public class PhyloAlgorithms {
 		double[] nodeDist = new double[size];
 		ArrayList<String> labels = new ArrayList<String>(dm.getLabels());
 
-		// net divergence
-
 		// init terminal nodes
 		ArrayList<Node> nodes = new ArrayList<Node>();
 		for (int i = 0; i < size; i++) {
@@ -485,8 +483,9 @@ public class PhyloAlgorithms {
 		while (size > 2) {
 			// calculate nodeDist
 			for (int i = 0; i < size; i++) {
+				nodeDist[i] = 0;
 				for (int j = 0; j < size; j++) {
-					nodeDist[i] = +matrix[i][j];
+					nodeDist[i] +=  matrix[i][j];
 				}
 				nodeDist[i] = nodeDist[i] / (size - 2);
 			}
@@ -521,12 +520,11 @@ public class PhyloAlgorithms {
 			nodes.remove(minJ);
 
 			// set branch length
-			double br1 = (matrix[minI][minJ] / 2)
-					+ (nodeDist[minI] - nodeDist[minJ]) / 2;
+			double br1 = (matrix[minI][minJ] 
+					+ nodeDist[minI] - nodeDist[minJ]) / 2;
 
 			node1.setBranchLength(br1);
 			node2.setBranchLength(matrix[minI][minJ] - br1);
-
 			// rebuild distance matrix
 			// set the distances of new node at the index of minI
 			for (int k = 0; k < size; k++) {

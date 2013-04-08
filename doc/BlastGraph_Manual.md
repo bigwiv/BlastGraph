@@ -260,8 +260,8 @@ Check the *GainLoss* option on the tool bar to show the gene gain and loss data.
 
 Two Methods used for gene gain and loss estimation
 
-- *Simple Mapping*: Given a tree and the gene states (0: absent; 1: present) of the leaf nodes, the internal node gene state is estimated to be 1 only if the states of its direct children are all 1. The number of gene gain events is estimated by subtracting the number of genes for the parent from number of genes for the current node.
-- *Maximum Parsimony*: Given a tree and the gene states of the leaf nodes, the gene states of the internal node are estimated by minimizing the gene state changes throughout the tree. The gene gain and loss events are then counted based on the state results and the contributions to both events from unresolved states are calculated based on state probabilities.
+- *Simple Mapping*: Given a tree and gene states (0: absent; 1: present) of terminal nodes, the internal node gene state is estimated 1 only if it's direct children are all 1; 
+- *Maximum Parsimony*: Given a tree and gene states of terminal nodes, the internal node gene states is estimated by minimizing the gene state changes throughout the tree. The gene gain and loss events are then counted based on the state results and the contributions to both events from unresolved states are calculated based on state probability.
 
 [MCL]: http://micans.org/mcl "MCL"
 [Cygwin]: http://cygwin.com/ "Cygwin" 

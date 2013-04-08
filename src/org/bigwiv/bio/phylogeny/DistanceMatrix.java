@@ -5,6 +5,7 @@ package org.bigwiv.bio.phylogeny;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -129,23 +130,16 @@ public class DistanceMatrix {
 	}
 	
 	public void write(Writer writer) throws IOException{
+		writer.write("\t" + size + "\n");
 		for (int i = 0; i < size; i++) {
-			if(i == 0){
-				writer.write(labels.get(i));
-			}
-			writer.write("\t" + labels.get(i));
-		}
-		
-		writer.write("\n");
-		
-		for (int i = 0; i < size; i++) {
+			writer.write(labels.get(i));
 			for (int j = 0; j < size; j++) {
-				if(j == 0){
-					writer.write(matrix[i][j] + "");
-				}
-				writer.write("\t" + matrix[i][j]);
+				DecimalFormat df = new DecimalFormat("0.000000");
+				String num = df.format(matrix[i][j]);
+				writer.write("\t" + num);
 			}
 			writer.write("\n");
 		}
+		writer.close();
 	}
 }
