@@ -100,8 +100,12 @@ def main():
                     
                     location = str(seq_feature.location.start + 1) + "-" + str(seq_feature.location.end)
                     
+                    location = re.sub(r"[^0-9\-]", "", location)
+
                     product = ('product' in seq_feature.qualifiers) and seq_feature.qualifiers['product'][0] or seq_feature.qualifiers['gene'][0]
                     
+                    product = product.replace("|", "");
+
                     xref = seq_feature.qualifiers['db_xref']
                     
                     r = re.compile('GI.*')
