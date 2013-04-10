@@ -75,7 +75,7 @@ public class BlastXMLParserFacade
                 // resolve the NCBI URN
 //                System.out.println("resolve " + publicID + ":" + systemID);
 
-                String resourceName = "com/yeyanbo/bio/sax/blastxml/";
+                String resourceName = "org/bigwiv/bio/sax/blastxml/";
 
                 if (publicID.equals("-//NCBI//NCBI BlastOutput/EN")) {
                     resourceName = resourceName + "NCBI_BlastOutput.dtd";
@@ -118,7 +118,7 @@ public class BlastXMLParserFacade
             parser.setFeature("http://xml.org/sax/features/validation", false);
 
             // make a base URI just in case the user doesn't
-            baseURI = this.getClass().getClassLoader().getResource("com/yeyanbo/bio/sax/blastxml/").toString();
+            baseURI = this.getClass().getClassLoader().getResource("org/bigwiv/bio/sax/blastxml/").toString();
         }
         catch (SAXException se) { throw new BioException (se); }
         catch (ParserConfigurationException sce) { throw new BioException(sce); }

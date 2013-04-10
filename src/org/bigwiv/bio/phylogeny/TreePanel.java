@@ -529,7 +529,7 @@ public class TreePanel extends JPanel {
 
 			// data type
 			if (data.equals("bl")) {
-				DecimalFormat formater = new DecimalFormat("0.00");
+				DecimalFormat formater = new DecimalFormat("0.####");
 				dataString = formater.format(length);
 			} else if (data.equals("gl")) {
 				if (gainLossType == GainLossType.mapping) {
