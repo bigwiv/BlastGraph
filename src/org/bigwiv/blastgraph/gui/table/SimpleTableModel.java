@@ -12,8 +12,8 @@ import org.biojava.bio.seq.impl.NewAssembledSymbolList;
 
 public class SimpleTableModel extends AbstractTableModel {
 
-	private Vector<Vector<Object>> content = null;
-	private Vector<String> headerName = null;
+	protected Vector<Vector<Object>> content = null;
+	protected Vector<String> headerName = null;
 
 	public SimpleTableModel() {
 		super();

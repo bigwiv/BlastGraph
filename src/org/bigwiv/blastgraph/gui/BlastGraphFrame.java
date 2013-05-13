@@ -107,9 +107,13 @@ import org.bigwiv.blastgraph.gui.table.GeneContentModel;
 import org.bigwiv.blastgraph.gui.table.SearchResultModel;
 import org.bigwiv.blastgraph.gui.table.VerticesTable;
 import org.bigwiv.blastgraph.io.PrintUtilities;
+import org.biojava.bio.proteomics.aaindex.AAindex;
+
+import sun.awt.SunHints.Value;
 
 import edu.uci.ics.jung.algorithms.filters.FilterUtils;
 import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.algorithms.metrics.Metrics;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.RenderContext;
@@ -185,7 +189,7 @@ public class BlastGraphFrame extends JFrame {
 	private JLabel vertexCountLabel, edgeCountLabel, subGraphCountLabel;
 
 	private JLabel currentVertexCountLabel, currentEdgeCountLabel,
-			currentDegreePercentageLabel;
+			currentAccLabel;//ACC(Average Clustering Coefficient)
 
 	private JLabel selectedVertexCountLabel, selectedEdgeCountLabel;
 	private JComboBox modeBox;
@@ -859,21 +863,21 @@ public class BlastGraphFrame extends JFrame {
 			JLabel edges = new JLabel("Edges:");
 			currentEdgeCountLabel = new JLabel("0");
 
-			JLabel degreePercentage = new JLabel("Degree Percentage:");
-			currentDegreePercentageLabel = new JLabel("0");
+			JLabel acc = new JLabel("ACC:");
+			currentAccLabel = new JLabel("0");
 
 			GridBagManager.GRID_BAG.anchor = GridBagConstraints.WEST;
 			GridBagManager.GRID_BAG.weightx = 0.5;
 			GridBagManager.add(currentInfoPanel, vertices, 0, 0, 1, 1);
 			GridBagManager.add(currentInfoPanel, edges, 0, 1, 1, 1);
-			GridBagManager.add(currentInfoPanel, degreePercentage, 0, 2, 1, 1);
+			GridBagManager.add(currentInfoPanel, acc, 0, 2, 1, 1);
 			GridBagManager.GRID_BAG.anchor = GridBagConstraints.EAST;
 			GridBagManager.GRID_BAG.weightx = 0.5;
 			GridBagManager.add(currentInfoPanel, currentVertexCountLabel, 1, 0,
 					1, 1);
 			GridBagManager.add(currentInfoPanel, currentEdgeCountLabel, 1, 1,
 					1, 1);
-			GridBagManager.add(currentInfoPanel, currentDegreePercentageLabel,
+			GridBagManager.add(currentInfoPanel, currentAccLabel,
 					1, 2, 1, 1);
 
 		}// end of currentInfoPanel
@@ -1652,16 +1656,21 @@ public class BlastGraphFrame extends JFrame {
 			graphStatisticsPanel.setGraph(curGraph);
 			int edgeCount = curGraph.getEdgeCount();
 			int vertexCount = curGraph.getVertexCount();
-			double degreePct = 0;
+			double acc = 0;
 
 			if (vertexCount != 1) {
-				degreePct = edgeCount * 1.0
-						/ (((vertexCount - 1) * vertexCount) / 2);
+				Map<HitVertex, Double> ccs = Metrics.clusteringCoefficients(curGraph);
+				
+				for (double cc : ccs.values()) {
+					acc += cc;
+				}
+				
+				acc = acc / ccs.size();
 			}
 			currentVertexCountLabel.setText("" + vertexCount);
 			currentEdgeCountLabel.setText("" + edgeCount);
-			currentDegreePercentageLabel.setText(String.format("%1$.2f",
-					degreePct));
+			currentAccLabel.setText(String.format("%1$.2f",
+					acc));
 			int option;
 			if (count > maxCount) {
 				option = JOptionPane.showConfirmDialog(this, "Too large("
@@ -1694,7 +1703,7 @@ public class BlastGraphFrame extends JFrame {
 			saveCurGraphMenu.setEnabled(false);
 			currentVertexCountLabel.setText("0");
 			currentEdgeCountLabel.setText("0");
-			currentDegreePercentageLabel.setText("0");
+			currentAccLabel.setText("0");
 			selectedVertexCountLabel.setText("0");
 			selectedEdgeCountLabel.setText("0");
 			modeMenu.setEnabled(false);

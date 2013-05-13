@@ -154,19 +154,32 @@ public class MclCommand extends Command {
 				double weight = 0;
 
 				if (weightType == EVALUE_WEIGHT) {
-
+					
 					double evalue = valueEdge.getExpectValue();
-
+					
+					if(lowCutoff < highCutoff) return;
+					
 					if (evalue >= lowCutoff) {
 						weight = 0;
 					} else if (evalue < highCutoff) {
-						weight = -Math.log10(highCutoff);
+						if(lowCutoff > 1){
+							weight = -Math.log10(highCutoff/lowCutoff);
+						}else {
+							weight = -Math.log10(highCutoff);
+						}
 					} else {
-						weight = -Math.log10(evalue);
+						if(lowCutoff > 1){
+							weight = -Math.log10(evalue/lowCutoff);
+						}else {
+							weight = -Math.log10(evalue);
+						}
 					}
 
 				} else if (weightType == SCORE_WEIGHT) {
 					double score = valueEdge.getScore();
+					
+					if(lowCutoff > highCutoff) return;
+					
 					if (score <= lowCutoff) {
 						weight = 0;
 					} else if (score > highCutoff) {
@@ -177,6 +190,9 @@ public class MclCommand extends Command {
 				} else if (weightType == SCORE_DENSITY_WEIGHT) {
 					double scoreDensity = Global.graph
 							.getScoreDensity(valueEdge);
+					
+					if(lowCutoff > highCutoff) return;
+					
 					if (scoreDensity <= lowCutoff) {
 						weight = 0;
 					} else if (scoreDensity > highCutoff) {

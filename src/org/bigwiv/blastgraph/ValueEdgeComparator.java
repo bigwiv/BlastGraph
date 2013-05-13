@@ -17,7 +17,7 @@ public class ValueEdgeComparator<T> implements Comparator<ValueEdge> {
 	@Override
 	public int compare(ValueEdge arg0, ValueEdge arg1) {
 		// from weak to strong
-		double evalue = arg0.getExpectValue() - arg1.getExpectValue();
+		double evalue = Math.log10(arg0.getExpectValue()) - Math.log10(arg1.getExpectValue());
 		if (evalue < 0) {
 			return 1;
 		} else if (evalue > 0) {

@@ -1,5 +1,9 @@
 package org.bigwiv.blastgraph.gui.table;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
@@ -79,5 +83,23 @@ public class GeneContentModel extends SimpleTableModel {
 	 */
 	public Vector<String> getRowHeader(){
 		return this.rowHeaderName;
+	}
+	
+	@Override
+	public void writeTo(File file) throws IOException{
+
+		BufferedWriter br = new BufferedWriter(new FileWriter(file));
+		String tmpString;
+		
+		for (int i = 0; i < content.size(); i++) {
+			tmpString = getRowName(i);
+			for (int j = 0; j < headerName.size(); j++) {
+				tmpString = tmpString + "," + getValueAt(i, j);
+			}
+			
+			br.write(tmpString + "\n");
+		}
+		
+		br.close();
 	}
 }

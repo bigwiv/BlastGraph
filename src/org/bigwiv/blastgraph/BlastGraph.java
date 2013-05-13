@@ -663,8 +663,18 @@ public class BlastGraph<V, E> extends
 			this.addVertex(hv);
 		}
 
+		//if the existing edge is weaker than the edge to be add, replace existing one
+		//else do nothing
+		ValueEdgeComparator<ValueEdge> comparator = new ValueEdgeComparator<ValueEdge>();
 		for (ValueEdge ve : graphToUnion.getEdges()) {
-			this.addEdge(ve, graphToUnion.getEndpoints(ve));
+			Pair<HitVertex> pair = graphToUnion.getEndpoints(ve);
+			ValueEdge existEdge = this.findEdge(pair.getFirst(), pair.getSecond());
+			if(existEdge == null){
+				this.addEdge(ve, pair);
+			}else if(comparator.compare(ve, existEdge) == 1){
+				this.removeEdge(existEdge);
+				this.addEdge(ve, pair);
+			}
 		}
 	}
 
