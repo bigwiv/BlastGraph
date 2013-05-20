@@ -198,7 +198,7 @@ public class TreePanel extends JPanel {
 			if (gainLossType == GainLossType.mapping) {
 				PhyloAlgorithms.geneTreeMapping(tree, geneContent);
 			} else {
-				PhyloAlgorithms.geneTreeParsimony(tree, geneContent);
+				PhyloAlgorithms.geneTreeDolloParsimony(tree, geneContent);
 			}
 
 			if (isGlPieChart) {

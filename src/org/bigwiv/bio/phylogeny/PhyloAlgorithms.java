@@ -340,6 +340,209 @@ public class PhyloAlgorithms {
 	}
 
 	/**
+	 * estimate gene content of internal node using Dollo Parsimony( gene loss
+	 * is easier than parallel gene gain, event the number of loss events is
+	 * greater than gain events)
+	 * 
+	 * @param tree
+	 * @param geneContent
+	 */
+
+	public static void geneTreeDolloParsimony(Tree tree,
+			Map<String, BitArray> geneContent) {
+		Node rootNode = tree.getRootNode();
+		Set<Node> termNodes = tree.getTermNodes();
+
+		Set<Node> innerNodes = tree.getInnerNodes();
+
+		// gene family length
+		int gf = 0;
+		// init terminal nodes
+		for (Node node : termNodes) {
+			String label = node.getLabel();
+			BitArray genes = geneContent.get(label);
+			node.addNodeData("genes", genes);
+			gf = genes.size();
+			int[] state = new int[gf];
+			for (int i = 0; i < state.length; i++) {
+				state[i] = genes.get(i);
+			}
+			node.addNodeData("state", state);
+			node.addNodeData("geneNumber", (double) genes.cardinality());
+			node.addNodeData("estimate", 0.0);
+			node.addNodeData("estimateVar", 0.0);
+			node.addNodeData("gain", 0.0);
+			node.addNodeData("gainVar", 0.0);
+			node.addNodeData("loss", 0.0);
+			node.addNodeData("lossVar", 0.0);
+			node.addNodeData("inherit", 0.0);
+			node.addNodeData("inheritVar", 0.0);
+		}
+
+		// add state attribute for innerNodes
+		for (Node node : innerNodes) {
+			node.addNodeData("state", new int[gf]);
+			// there should be four types of data
+			// gain + inherit = estimate
+			// pre - loss = inherit
+			node.addNodeData("geneNumber", 0.0);
+			node.addNodeData("estimate", 0.0);
+			node.addNodeData("estimateVar", 0.0);
+			node.addNodeData("gain", 0.0);
+			node.addNodeData("gainVar", 0.0);
+			node.addNodeData("loss", 0.0);
+			node.addNodeData("lossVar", 0.0);
+			node.addNodeData("inherit", 0.0);
+			node.addNodeData("inheritVar", 0.0);
+		}
+
+		// set state for each position
+		for (int p = 0; p < gf; p++) {
+			setDolloGeneState(rootNode, p);
+		}
+
+		// find best state using Dollo Parsimony and estimate gain loss event
+		// summing up the gene number, gain and loss event
+		for (int p = 0; p < gf; p++) {
+			Stack<Node> nodeStack = new Stack<Node>();
+			nodeStack.push(rootNode);
+			Node curNode;
+			while (!nodeStack.isEmpty()) {
+				curNode = nodeStack.pop();
+				if (!curNode.isTerminal()) {
+					Node leftNode = curNode.getLeftChild();
+					Node rightNode = curNode.getRightChild();
+					nodeStack.push(leftNode);
+					nodeStack.push(rightNode);
+
+				}
+
+				int[] curState = (int[]) curNode.getNodeData("state");
+				double estimate = (Double) curNode.getNodeData("estimate");
+				double inherit = (Double) curNode.getNodeData("inherit");
+				double gain = (Double) curNode.getNodeData("gain");
+				double loss = (Double) curNode.getNodeData("loss");
+				double estimateVar = (Double) curNode
+						.getNodeData("estimateVar");
+				double inheritVar = (Double) curNode.getNodeData("inheritVar");
+				double gainVar = (Double) curNode.getNodeData("gainVar");
+				double lossVar = (Double) curNode.getNodeData("lossVar");
+
+
+				if (curNode.isRoot()) {
+					int[] leftState = (int[])curNode.getLeftChild().getNodeData("state");
+					int[] rightState = (int[])curNode.getRightChild().getNodeData("state");
+
+					//solve previously unestimated states for -1 based on children
+					//actually to distinguish (-1,0) and (1,0) children pairs
+					if(curState[p] == -1 && (leftState[p] == -1 || rightState[p] == -1)){
+						curState[p] = 0;
+					}
+					
+					//state change
+					if (curState[p] == 1) {
+						curNode.addNodeData("gain", gain + 1);
+						curNode.addNodeData("estimate", estimate = estimate + 1);
+					} else if (curState[p] == -1) {
+						curNode.addNodeData("gain", gain + 0.5);
+						curNode.addNodeData("gainVar", gainVar + 0.5);
+						curNode.addNodeData("estimate",
+								estimate = estimate + 0.5);
+						curNode.addNodeData("estimateVar", estimateVar + 0.5);
+					}
+				} else {
+
+					Node parentNode = curNode.getParent();
+					int[] parentState = (int[]) parentNode.getNodeData("state");
+
+					// confirm child based on the parent state to make sure
+					// the number of changes is minimum
+					if (curState[p] == -1 && parentState[p] != -1) {
+						curState[p] = parentState[p];
+					}
+
+					if (parentState[p] == 1) {
+						if (curState[p] == 0) {
+							curNode.addNodeData("loss", loss + 1);
+						} else if (curState[p] == 1) {
+							curNode.addNodeData("inherit", inherit + 1);
+							curNode.addNodeData("estimate",
+									estimate = estimate + 1);
+						}
+					} else if (parentState[p] == 0) {
+						if (curState[p] == 1) {
+							curNode.addNodeData("gain", gain + 1);
+							curNode.addNodeData("estimate",
+									estimate = estimate + 1);
+						}
+					} else if (parentState[p] == -1) {
+						if (curState[p] == 1) {
+							curNode.addNodeData("gain", gain + 0.5);
+							curNode.addNodeData("gainVar", gainVar + 0.5);
+							curNode.addNodeData("inherit", inherit + 0.5);
+							curNode.addNodeData("inheritVar", inheritVar + 0.5);
+							curNode.addNodeData("estimate",
+									estimate = estimate + 1);
+						} else if (curState[p] == 0) {
+							curNode.addNodeData("loss", loss + 0.5);
+							curNode.addNodeData("lossVar", lossVar + 0.5);
+						} else if (curState[p] == -1) {
+							curNode.addNodeData("loss", loss + 0.25);
+							curNode.addNodeData("lossVar", lossVar + 0.25);
+							curNode.addNodeData("gain", gain + 0.25);
+							curNode.addNodeData("gainVar", gainVar + 0.25);
+							curNode.addNodeData("inherit", inherit + 0.25);
+							curNode.addNodeData("inheritVar", inheritVar + 0.25);
+							curNode.addNodeData("estimate",
+									estimate = estimate + 0.25);
+							curNode.addNodeData("estimateVar",
+									estimateVar + 0.25);
+						}
+					}
+
+				}
+
+				if (!curNode.isTerminal()) {
+					curNode.addNodeData("geneNumber", estimate);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * set the gene state: 1 for presence; 0 for absence; -1 for both(01).
+	 * 
+	 * @param node
+	 * @param p
+	 * @return
+	 */
+	private static int setDolloGeneState(Node node, int p) {
+		if (node.isTerminal()) {
+			return ((int[]) node.getNodeData("state"))[p];
+		} else {
+			Node left = node.getLeftChild();
+			Node right = node.getRightChild();
+			int leftState = setDolloGeneState(left, p);
+			int rightState = setDolloGeneState(right, p);
+			int state = 0;
+
+			if (Math.abs(leftState * rightState) == 1) {
+				state = 1;
+			} else if ((Math.abs(leftState) == 1 && rightState == 0)
+					|| (leftState == 0 && Math.abs(rightState) == 1)) {
+
+				state = -1;
+			} else {
+				state = 0;
+			}
+
+			((int[]) node.getNodeData("state"))[p] = state;
+
+			return state;
+		}
+	}
+
+	/**
 	 * 
 	 * @param matrix
 	 * @param number
@@ -485,7 +688,7 @@ public class PhyloAlgorithms {
 			for (int i = 0; i < size; i++) {
 				nodeDist[i] = 0;
 				for (int j = 0; j < size; j++) {
-					nodeDist[i] +=  matrix[i][j];
+					nodeDist[i] += matrix[i][j];
 				}
 				nodeDist[i] = nodeDist[i] / (size - 2);
 			}
@@ -520,8 +723,7 @@ public class PhyloAlgorithms {
 			nodes.remove(minJ);
 
 			// set branch length
-			double br1 = (matrix[minI][minJ] 
-					+ nodeDist[minI] - nodeDist[minJ]) / 2;
+			double br1 = (matrix[minI][minJ] + nodeDist[minI] - nodeDist[minJ]) / 2;
 
 			node1.setBranchLength(br1);
 			node2.setBranchLength(matrix[minI][minJ] - br1);
