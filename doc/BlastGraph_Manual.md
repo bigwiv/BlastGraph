@@ -15,7 +15,7 @@
 
 Computer requirements:
 
-- JRE: Java SE Runtime Environment 1.6;
+- JRE: Java SE Runtime Environment 1.6 or later;
 - Free memory: 2G;
 - Free space: 10G;
 
@@ -119,17 +119,21 @@ Sample of converted result:
 
 #### 2.2.2 All to All blast
 
-Usually, the generated FASTA files can then be used to build a local database using formatdb program from the BLASTALL package.  These files can then be used as BLAST queries against the generated database. However, as BlastGraph can merge multiple BLAST results into a single graph, there is a second approach that can be adopted.  If previous studies or analyses indicate the genomes can be classified into two distantly related sets, then an all-to-all BLAST analysis can be performed individually within both sets followed by a final BLAST between sets with different parameters, such as different scoring matrices.  In this way, remote similarities or connections can be identified.
+Usually, the generated FASTA files can then be used to build a local database using formatdb program from the BLASTALL/BLAST+ package.  These files can then be used as BLAST queries against the generated database. However, as BlastGraph can merge multiple BLAST results into a single graph, there is a second approach that can be adopted.  If previous studies or analyses indicate the genomes can be classified into two distantly related sets, then an all-to-all BLAST analysis can be performed individually within both sets followed by a final BLAST between sets with different parameters, such as different scoring matrices.  In this way, remote similarities or connections can be identified.
 
 The BlastGraph only accept XML format of Blast result as input. Here a simple instruction is given just in case. 
 
 Create a sequence datebase from the generated Fasta file(s)
 
-	formatdb -i sample.faa
+	formatdb -i sample.faa (BLASTALL 2.2.25)
+or
+	makeblastdb -dbtype 'prot' -in sample.faa (BLAST+ 2.2.28)
 
 Blast using it again as query to the database and generate the XML result.
 
-	blastall -p blastp -d sample.faa -i sample.faa -e 1 -m 7 -o sample.xml 
+	blastall -p blastp -d sample.faa -i sample.faa -e 1 -m 7 -o sample.xml
+or
+	blastp -query sample.faa -db sample.faa -evalue 1 -outfmt 5 -out sample.xml
 
 We can set a large E-value(-e 1) at the beginning as BlastGraph can flexibly filter the results.
 
